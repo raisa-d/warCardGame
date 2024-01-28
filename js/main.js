@@ -16,6 +16,14 @@ if (!localStorage.getItem('deck_id')) {
   });
 }
 
+// initialize local storage for both players' piles
+if (!localStorage.getItem('p1Pile')) {
+  localStorage.setItem('p1Pile', 0)
+}
+if (!localStorage.getItem('p2Pile')) {
+  localStorage.setItem('p2Pile', 0)
+}
+
 // set deckID variable to the same ID stored in local storage
 deckID += localStorage.getItem('deck_id')
 
@@ -120,12 +128,21 @@ function drawCards(numCards, isWar){
 // helper function to convert royal cards to numbers (or for other cards, just return the string value to a number)
 let convertToNum = val => val === 'ACE' ? 14 : val === 'KING' ? 13 : val === 'QUEEN' ? 12 : val === 'JACK' ? 11 : Number(val)
 
+function checkPileCounts(data) {
+  console.log(data.piles['player1'].remaining)
+  console.log(data.piles['player2'].remaining)
+  
+  localStorage.setItem('p1Pile', data.piles['player1'].remaining)
+  localStorage.setItem('p2Pile', data.piles['player2'].remaining)
+}
+
 // function to add the cards each player has won into their own piles (normal rounds)
 function addTwoToPile(player, card1, card2) {
   fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${card1},${card2}`)
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
+    checkPileCounts(data)
   })
   .catch(err => {
     console.log(`error ${err}`)
@@ -137,6 +154,7 @@ function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
+    checkPileCounts(data)
   })
   .catch(err => {
     console.log(`error ${err}`)
@@ -162,7 +180,6 @@ function drawFromPlayerDecks() {
 === CHANGES TO MAKE ===
 - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
 - show users how many cards each player has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property).
-- store how many cards each player has in local storage
 - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 - announce who won the game
 - style game
