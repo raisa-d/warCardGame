@@ -30,10 +30,28 @@ function drawCards(numCards, isWar){
     .then(res => res.json())
     .then(data => {
       console.log(data)
+
+      // variables to store pictures for player1 and 2
+      let p1Pic = document.querySelector('#player1')
+      let p2Pic = document.querySelector('#player2')
+
+      // if the round is war, tell user you're drawing cards
+      if (isWar) {
+        document.querySelector('p').innerText = 'Drawing 3 cards...'
+
+        // show images of back of card
+        p1Pic.src = 'https://www.deckofcardsapi.com/static/img/back.png'
+        p2Pic.src = 'https://www.deckofcardsapi.com/static/img/back.png'
+        
+        // after 1 second, draw last card and show image
+        setTimeout(() => {
+          document.querySelector('p').innerText = 'Drawing last card...'
+        }, 2000)
+      }
       
       // insert images of last two cards picked into dom
-      document.querySelector('#player1').src = data.cards[numCards - 2].image
-      document.querySelector('#player2').src = data.cards[numCards - 1].image
+      p1Pic.src = data.cards[numCards - 2].image
+      p2Pic.src = data.cards[numCards - 1].image
 
       // get value from each card, pass into convertToNum function so all of our data can be handled as numbers
       let player1Val = convertToNum(data.cards[numCards - 2].value)
@@ -117,10 +135,8 @@ function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
 }
 
 function wartime() {
-  // change button text
   // add event listener so the cards are drawn once button is pressed
-  // tell user "Drawing 3 cards...drawing last card...player X takes all the cards"
-  drawCards(8, true)
+  document.querySelector('button').addEventListener('click', () => drawCards(8, true))
 }
 
 // **function for when players start drawing from their own decks individually
