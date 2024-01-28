@@ -1,0 +1,81 @@
+/* Box Model Hack */
+*{
+  box-sizing: border-box;
+}
+
+/* Font Sizing */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size:2rem;
+}
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+
+.hidden {
+  display:none;
+}
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/
+/* TYPOGRAPHY */
+/* title */
+h1 {
+  font-size: 3.6rem;
+  margin: 3rem;
+  text-align: center;
+}
+
+h1, h2, h3 {
+  font-weight: 900;
+}
+
+h3 {
+  font-size:2.4rem;
+  margin: 2rem;
+  text-align: center;
+}
+
+/* player text */
+h2 {
+  margin: 2rem 0 1rem 0;
+}
+
+/* BUTTON */
+#button-container {
+  display:flex;
+  justify-content: center;
+}
+
+button {
+  font-size:2rem;
+  background: #1f6e8a;
+  border: 1px solid #1f6e8a;
+  color: #fff;
+  border-radius:5px;
+  height:5rem;
+}
+
+button:hover {
+  background-color: #2685a7;
+}
+
+/* space each player */
+.players {
+  display: flex;
+  justify-content: space-around;
+  /* space results in between */
+  align-items:center;
+}
+
+/* center player text over card pics */
+.player-container {
+  display:flex;
+  flex-flow: column;
+  align-items: center;
+}
