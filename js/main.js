@@ -20,11 +20,11 @@ if (!localStorage.getItem('deck_id')) {
 deckID += localStorage.getItem('deck_id')
 
 // event listener for button click
-document.querySelector('button').addEventListener('click', drawTwo)
+document.querySelector('button').addEventListener('click', () => {drawCards(2)});
 
 // when click button, draw 2 cards
-function drawTwo(){
-  const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=2`
+function drawCards(numCards){
+  const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=${numCards}`
 
   fetch(url)
     .then(res => res.json())
@@ -74,6 +74,7 @@ function drawTwo(){
 let convertToNum = val => val === 'ACE' ? 14 : val === 'KING' ? 13 : val === 'QUEEN' ? 12 : val === 'JACK' ? 11 : Number(val)
 
 // function to add the cards each player has won into their own piles
+// ** make this function so you can add more than two to the pile (in case of war and you need to add 4 cards. maybe have a player argument and a card array argument? you can have an array of the codes that need to be added to their piles, and loop through the array)
 function addTwoToPile(player, card1, card2) {
   fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${card1},${card2}`)
   .then(res => res.json()) // parse response as JSON
@@ -87,8 +88,8 @@ function addTwoToPile(player, card1, card2) {
 
 // **WAR. each person draws 3 cards flipped over and the 4th compete against each other
 function wartime() {
-// draw 4 cards
-// add cards to winner's pile
+drawCards(4)
+// add cards to winner's pile (right now the cards are added to their piles in the drawCards() function, but it only adds the first two cards (because of the addTwoCards() function)) need to make it so you can add any number of cards
 }
 
 // **function for when players start drawing from their own decks individually
