@@ -89,7 +89,7 @@ function addTwoToPile(player, card1, card2) {
 // **WAR. each person draws 3 cards flipped over and the 4th compete against each other
 function wartime() {
 drawCards(4)
-// add cards to winner's pile (right now the cards are added to their piles in the drawCards() function, but it only adds the first two cards (because of the addTwoCards() function)) need to make it so you can add any number of cards
+// **add cards to winner's pile (right now the cards are added to their piles in the drawCards() function, but it only adds the first two cards (because of the addTwoCards() function)) need to make it so you can add any number of cards
 }
 
 // **function for when players start drawing from their own decks individually
@@ -99,14 +99,13 @@ function drawFromPlayerDeck(player) {
 
 /*
 CHANGES TO MAKE
-- make it so that we don't actually fetch a new deck at all on page load unless we need to
 - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck
-- if there was a previous game, ask user if they want to continue that game or start a new one. if they want to start a new one, we need to get a new deckID
+- code what happens when you actually have war, drawing 3 cards each then the 4th
 - announce who won the game
-- incorporate what happens when you actually have war, drawing 3 cards each then the 4th
-- we need to store how many cards each player is holding. the person who has the most when there are no more cards to pick from wins.
-- have it enter on a start game screen
-- let them choose how many players
-- have a flipped over card pic placeholder before they draw
 - style game
+
+At beginning of game:
+- have it enter on a start game screen
+- if there was a previous game, ask user if they want to continue that game or start a new one. if they want to start a new one, we need to get a new deckID
+- let them choose how many players and player names
 */
