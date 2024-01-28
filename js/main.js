@@ -64,8 +64,11 @@ function drawCards(numCards, isWar){
           result.innerText = 'Player 1 Wins the War!' 
           buttonReg.classList.remove('hidden')
           warButton.classList.add('hidden')
-        } else result.innerText = 'Player 1 Wins!';
-        // isWar ? result.innerText = 'Player 1 Wins the War!' : result.innerText = 'Player 1 Wins!'
+    
+        } else {
+          result.innerText = 'Player 1 Wins!';
+
+        }
         
         // if it isn't war and player 1 wins, they add 2 cards to their pile
         if (!isWar) {
@@ -88,7 +91,6 @@ function drawCards(numCards, isWar){
           buttonReg.classList.remove('hidden')
           warButton.classList.add('hidden')
         } else result.innerText = 'Player 2 Wins!';
-        // isWar ? result.innerText = 'Player 2 Wins the War!' : result.innerText = 'Player 2 Wins!'
         
         // if player 2 wins, they add all of the cards to their pile
         if (!isWar) {
@@ -104,6 +106,8 @@ function drawCards(numCards, isWar){
         }
       
       } else {
+        result.innerText = 'TIME FOR WAR'
+        console.log('WAR ROUND')
         wartime()
       }
 
@@ -140,9 +144,6 @@ function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
 }
 
 function wartime() {
-  result.innerText = 'TIME FOR WAR'
-  console.log('WAR ROUND')
-
   // hide button for regular round
   buttonReg.classList.add('hidden')
   // show button for war round
