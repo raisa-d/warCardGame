@@ -178,8 +178,8 @@ function drawFromPlayerDecks() {
 
 /*
 === CHANGES TO MAKE ===
+- show users how many cards each player has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property). get from local storage
 - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
-- show users how many cards each player has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property).
 - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 - announce who won the game
 - style game
