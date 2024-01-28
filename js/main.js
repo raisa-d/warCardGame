@@ -129,9 +129,6 @@ function drawCards(numCards, isWar){
 let convertToNum = val => val === 'ACE' ? 14 : val === 'KING' ? 13 : val === 'QUEEN' ? 12 : val === 'JACK' ? 11 : Number(val)
 
 function checkPileCounts(data) {
-  console.log(data.piles['player1'].remaining)
-  console.log(data.piles['player2'].remaining)
-  
   localStorage.setItem('p1Pile', data.piles['player1'].remaining)
   localStorage.setItem('p2Pile', data.piles['player2'].remaining)
 }
