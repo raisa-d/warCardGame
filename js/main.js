@@ -129,8 +129,18 @@ function drawCards(numCards, isWar){
 let convertToNum = val => val === 'ACE' ? 14 : val === 'KING' ? 13 : val === 'QUEEN' ? 12 : val === 'JACK' ? 11 : Number(val)
 
 function checkPileCounts(data) {
-  localStorage.setItem('p1Pile', data.piles['player1'].remaining)
-  localStorage.setItem('p2Pile', data.piles['player2'].remaining)
+  // if they have the property remaining, set item to that property
+  if (data.piles['player1'].remaining) {
+    localStorage.setItem('p1Pile', data.piles['player1'].remaining)
+  }
+  if (data.piles['player2'].remaining) {
+    localStorage.setItem('p2Pile', data.piles['player2'].remaining)
+  }
+
+  let p1PileCount = localStorage.getItem('p1Pile')
+  let p2PileCount = localStorage.getItem('p2Pile')
+  document.querySelector('#p1PileCount').innerText = `${p1PileCount} Cards in Pile`
+  document.querySelector('#p2PileCount').innerText = `${p2PileCount} Cards in Pile`
 }
 
 // function to add the cards each player has won into their own piles (normal rounds)

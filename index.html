@@ -2,9 +2,10 @@
 <html lang="en">
 	<head>
     	<meta charset="utf-8">
-    	<meta name="description" content="This is where your description goes">
+    	<meta name="War Card Game" content="Play the game of war">
     	<meta name="keywords" content="one, two, three">
-
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+		
 		<title>This is WAR</title>
 
 		<!-- external CSS link -->
@@ -12,7 +13,13 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<h1>This is...WAR!!!!</h1>
+		<header>
+			<h1>This is...WAR!!!!</h1>
+			<!-- image of deck to draw from -->
+			<div id='ogDeck'>
+				<img src="https://www.deckofcardsapi.com/static/img/back.png" alt="Playing Card">
+			</div>
+		</header>
 
 		<div id="button-container">
 			<button id="buttonReg">Deal Cards For Each Player!</button>
@@ -26,6 +33,7 @@
 			<div class="player-container">
 				<h2>Player 1</h2>
 				<img id="player1" src="https://www.deckofcardsapi.com/static/img/back.png" alt="Playing Card">
+				<p id="p1PileCount"></p>
 			</div>
 			<div>
 				<!-- space for result -->
@@ -34,6 +42,7 @@
 			<div class="player-container">
 				<h2>Player 2</h2>
 				<img id="player2" src="https://www.deckofcardsapi.com/static/img/back.png" alt="Playing Card">
+				<p id="p2PileCount"></p>
 			</div>
 		</div>
 

@@ -27,7 +27,7 @@ body {
 /* title */
 h1 {
   font-size: 3.6rem;
-  margin: 3rem;
+  margin-top: 3rem;
 }
 
 h1, h2, h3, p {
@@ -73,6 +73,7 @@ button:hover {
   justify-content: center;
   /* space results in between */
   align-items:center;
+  margin-bottom:10rem;
 }
 
 /* center player text over card pics */
@@ -85,4 +86,14 @@ button:hover {
 p {
   margin: 3rem auto 0 auto;
   width:50%;
+}
+
+#ogDeck {
+  display:flex;
+  justify-content: center;
+}
+
+#ogDeck img {
+  width:15rem;
+  margin:2rem;
 }
