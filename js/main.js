@@ -20,10 +20,10 @@ if (!localStorage.getItem('deck_id')) {
 deckID += localStorage.getItem('deck_id')
 
 // event listener for button click to draw cards
-document.querySelector('button').addEventListener('click', () => {drawCards(2)});
+document.querySelector('button').addEventListener('click', () => {drawCards(2, false)});
 
 // when click button, draw 2 cards
-function drawCards(numCards){
+function drawCards(numCards, isWar){
   const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=${numCards}`
 
   fetch(url)
@@ -46,25 +46,43 @@ function drawCards(numCards){
       if (player1Val > player2Val) {
         result.innerText = 'Player 1 Wins!'
         
-        // if player 1 wins, they add all of the cards to their pile
-        for(let i = 0; i < numCards; i++) {
-          addToPile('player1', data.cards[i].code)
+        // if it isn't war and player 1 wins, they add 2 cards to their pile
+        if (!isWar) {
+          let p1CardCode = data.cards[0].code
+          let p2CardCode = data.cards[1].code
+          addTwoToPile('player1', p1CardCode, p2CardCode)
+        } else { // if it is war, they add 8 cards to their pile
+          let cardCodes = []
+          // fill array of card codes
+          for (let i = 0; i < 8; i++) {
+            cardCodes.push(data.cards[i].code)
+          }
+          // pass them in as arguments to addEightToPile
+          addEightToPile('player1', ...cardCodes)
         }
 
       } else if (player1Val < player2Val) {
         result.innerText = 'Player 2 Wins!'
         
         // if player 2 wins, they add all of the cards to their pile
-        for(let i = 0; i < 8; i++) {
-          addToPile('player2', data.cards[i].code)
+        if (!isWar) {
+          let p1CardCode = data.cards[0].code
+          let p2CardCode = data.cards[1].code
+          addTwoToPile('player2', p1CardCode, p2CardCode)
+        } else {
+          let cardCodes = []
+          for (let i = 0; i < 8; i++) {
+            cardCodes.push(data.cards[i].code)
+          }
+          addEightToPile('player2', ...cardCodes)
         }
       
       } else {
         result.innerText = 'TIME FOR WAR'
-        setTimeout(wartime, "2 seconds")
+        // **have user hit another button to draw cards for war -- right now it is happening so fast they won't even see it as a separate round
+        console.log('WAR ROUND')
+        drawCards(8, true)
       }
-
-
 
     })
     .catch(err => {
@@ -72,62 +90,12 @@ function drawCards(numCards){
     });
 }
 
-// function drawTwo(numCards){
-//   const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=${numCards}`
-
-//   fetch(url)
-//     .then(res => res.json())
-//     .then(data => {
-//       console.log(data)
-      
-//       // insert player imgs into dom
-//       document.querySelector('#player1').src = data.cards[0].image
-//       document.querySelector('#player2').src = data.cards[1].image
-
-//       // get value from each card, pass into convertToNum function so all of our data can be handled as numbers
-//       let player1Val = convertToNum(data.cards[0].value)
-//       let player2Val = convertToNum(data.cards[1].value)
-//       let p1CardCode = data.cards[0].code
-//       let p2CardCode = data.cards[1].code
-
-//       // variable for where we place result
-//       let result = document.querySelector('h3')
-
-//       // logic to handle who wins
-//       if (player1Val > player2Val) {
-//         result.innerText = 'Player 1 Wins!'
-        
-//         // add cards to player 1's pile
-//         addToPile('player1', p1CardCode)
-//         addToPile('player1', p2CardCode)
-
-//       } else if (player1Val < player2Val) {
-//         result.innerText = 'Player 2 Wins!'
-        
-//         // add cards to player 2's pile
-//         addToPile('player2', p1CardCode)
-//         addToPile('player2', p2CardCode)
-      
-//       } else {
-//         result.innerText = 'WARTIME'
-//         wartime()
-//       }
-
-
-
-//     })
-//     .catch(err => {
-//       console.log(`error ${err}`)
-//     });
-// }
-
 // helper function to convert royal cards to numbers (or for other cards, just return the string value to a number)
 let convertToNum = val => val === 'ACE' ? 14 : val === 'KING' ? 13 : val === 'QUEEN' ? 12 : val === 'JACK' ? 11 : Number(val)
 
-// function to add the cards each player has won into their own piles
-// ** make this function so you can add more than two to the pile (in case of war and you need to add 4 cards. maybe have a player argument and a card array argument? you can have an array of the codes that need to be added to their piles, and loop through the array)
-function addToPile(player, card) {
-  fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${card}`)
+// function to add the cards each player has won into their own piles (normal rounds)
+function addTwoToPile(player, card1, card2) {
+  fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${card1},${card2}`)
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
@@ -137,10 +105,15 @@ function addToPile(player, card) {
   });
 }
 
-// **WAR. each person draws 3 cards flipped over and the 4th compete against each other
-function wartime() {
-  drawCards(8)
-// **add cards to winner's pile (right now the cards are added to their piles in the drawTwo() function, but it only adds the first two cards (because of the addTwoCards() function)) need to make it so you can add any number of cards
+function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
+  fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${c1},${c2},${c3},${c4},${c5},${c6},${c7},${c8}`)
+  .then(res => res.json()) // parse response as JSON
+  .then(data => {
+    console.log(data);
+  })
+  .catch(err => {
+    console.log(`error ${err}`)
+  });
 }
 
 // **function for when players start drawing from their own decks individually
@@ -151,9 +124,11 @@ function drawFromPlayerDeck(player) {
 /*
 CHANGES TO MAKE
 - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck
-- code what happens when you actually have war, drawing 3 cards each then the 4th
+- make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 - announce who won the game
+- store how many cards each person has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property).
 - style game
+   - have war rounds styling be different/more intense than regular rounds
 
 At beginning of game:
 - have it enter on a start game screen
