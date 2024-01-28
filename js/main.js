@@ -81,7 +81,7 @@ function drawCards(numCards, isWar){
         result.innerText = 'TIME FOR WAR'
         // **have user hit another button to draw cards for war -- right now it is happening so fast they won't even see it as a separate round
         console.log('WAR ROUND')
-        drawCards(8, true)
+        wartime()
       }
 
     })
@@ -116,13 +116,20 @@ function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
   });
 }
 
+function wartime() {
+  // change button text
+  // add event listener so the cards are drawn once button is pressed
+  // tell user "Drawing 3 cards...drawing last card...player X takes all the cards"
+  drawCards(8, true)
+}
+
 // **function for when players start drawing from their own decks individually
 function drawFromPlayerDeck(player) {
 
 }
 
 /*
-CHANGES TO MAKE
+=== CHANGES TO MAKE ===
 - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck
 - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 - announce who won the game
