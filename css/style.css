@@ -81,3 +81,8 @@ button:hover {
   flex-flow: column;
   align-items: center;
 }
+
+p {
+  margin: 3rem auto 0 auto;
+  width:50%;
+}

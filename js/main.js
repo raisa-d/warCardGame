@@ -19,8 +19,12 @@ if (!localStorage.getItem('deck_id')) {
 // set deckID variable to the same ID stored in local storage
 deckID += localStorage.getItem('deck_id')
 
+// variables for buttons
+const buttonReg = document.querySelector('#buttonReg')
+const warButton = document.querySelector('#buttonWar')
+
 // event listener for button click to draw cards
-document.querySelector('button').addEventListener('click', () => {drawCards(2, false)});
+buttonReg.addEventListener('click', () => {drawCards(2, false)});
 
 // when click button, draw 2 cards
 function drawCards(numCards, isWar){
@@ -31,28 +35,22 @@ function drawCards(numCards, isWar){
     .then(data => {
       console.log(data)
 
+      // if there aren't enough cards to draw from
+      if (data.error === `Not enough cards remaining to draw ${numCards} additional`) {
+        // **draw from your own piles
+        drawFromPlayerDecks()
+      }
+
       // variables to store pictures for player1 and 2
       let p1Pic = document.querySelector('#player1')
       let p2Pic = document.querySelector('#player2')
-
-      // if the round is war, tell user you're drawing cards
-      if (isWar) {
-        document.querySelector('p').innerText = 'Drawing 3 cards...'
-
-        // show images of back of card
-        p1Pic.src = 'https://www.deckofcardsapi.com/static/img/back.png'
-        p2Pic.src = 'https://www.deckofcardsapi.com/static/img/back.png'
-        
-        // after 1 second, draw last card and show image
-        setTimeout(() => {
-          document.querySelector('p').innerText = 'Drawing last card...'
-        }, 2000)
-      }
       
-      // insert images of last two cards picked into dom
+      // place images of cards picked into DOM
       p1Pic.src = data.cards[numCards - 2].image
       p2Pic.src = data.cards[numCards - 1].image
 
+      document.querySelector('p').innerText = ''
+    
       // get value from each card, pass into convertToNum function so all of our data can be handled as numbers
       let player1Val = convertToNum(data.cards[numCards - 2].value)
       let player2Val = convertToNum(data.cards[numCards - 1].value)
@@ -62,7 +60,12 @@ function drawCards(numCards, isWar){
 
       // logic to handle who wins
       if (player1Val > player2Val) {
-        result.innerText = 'Player 1 Wins!'
+        if (isWar) {
+          result.innerText = 'Player 1 Wins the War!' 
+          buttonReg.classList.remove('hidden')
+          warButton.classList.add('hidden')
+        } else result.innerText = 'Player 1 Wins!';
+        // isWar ? result.innerText = 'Player 1 Wins the War!' : result.innerText = 'Player 1 Wins!'
         
         // if it isn't war and player 1 wins, they add 2 cards to their pile
         if (!isWar) {
@@ -80,7 +83,12 @@ function drawCards(numCards, isWar){
         }
 
       } else if (player1Val < player2Val) {
-        result.innerText = 'Player 2 Wins!'
+        if (isWar) {
+          result.innerText = 'Player 2 Wins the War!' 
+          buttonReg.classList.remove('hidden')
+          warButton.classList.add('hidden')
+        } else result.innerText = 'Player 2 Wins!';
+        // isWar ? result.innerText = 'Player 2 Wins the War!' : result.innerText = 'Player 2 Wins!'
         
         // if player 2 wins, they add all of the cards to their pile
         if (!isWar) {
@@ -96,9 +104,6 @@ function drawCards(numCards, isWar){
         }
       
       } else {
-        result.innerText = 'TIME FOR WAR'
-        // **have user hit another button to draw cards for war -- right now it is happening so fast they won't even see it as a separate round
-        console.log('WAR ROUND')
         wartime()
       }
 
@@ -135,21 +140,30 @@ function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
 }
 
 function wartime() {
-  // add event listener so the cards are drawn once button is pressed
-  document.querySelector('button').addEventListener('click', () => drawCards(8, true))
+  result.innerText = 'TIME FOR WAR'
+  console.log('WAR ROUND')
+
+  // hide button for regular round
+  buttonReg.classList.add('hidden')
+  // show button for war round
+  warButton.classList.remove('hidden')
+  
+  // event listener on war button 
+  warButton.addEventListener('click', () => drawCards(8, true))
 }
 
 // **function for when players start drawing from their own decks individually
-function drawFromPlayerDeck(player) {
-
+function drawFromPlayerDecks() {
+  document.querySelector('p').innerText = 'Not enough cards to draw from...in next iteration you will be able to draw from your own piles'
 }
 
 /*
 === CHANGES TO MAKE ===
-- handle the case where you have no cards left but try to draw. instead you need to draw from your own deck
+- handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
+- show users how many cards each player has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property).
+- store how many cards each player has in local storage
 - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 - announce who won the game
-- store how many cards each person has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property).
 - style game
    - have war rounds styling be different/more intense than regular rounds
 
