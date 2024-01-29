@@ -132,15 +132,16 @@ function checkPileCounts(data) {
   // if they have the property remaining, set item to that property
   if (data.piles['player1'].remaining) {
     localStorage.setItem('p1Pile', data.piles['player1'].remaining)
+    
+    let p1PileCount = localStorage.getItem('p1Pile')
+    document.querySelector('#p1PileCount').innerText = `${p1PileCount} Cards in Pile`
   }
   if (data.piles['player2'].remaining) {
     localStorage.setItem('p2Pile', data.piles['player2'].remaining)
-  }
 
-  let p1PileCount = localStorage.getItem('p1Pile')
-  let p2PileCount = localStorage.getItem('p2Pile')
-  document.querySelector('#p1PileCount').innerText = `${p1PileCount} Cards in Pile`
-  document.querySelector('#p2PileCount').innerText = `${p2PileCount} Cards in Pile`
+    let p2PileCount = localStorage.getItem('p2Pile')
+    document.querySelector('#p2PileCount').innerText = `${p2PileCount} Cards in Pile`
+  }
 }
 
 // function to add the cards each player has won into their own piles (normal rounds)
@@ -196,4 +197,7 @@ At beginning of game:
 - have it enter on a start game screen
 - if there was a previous game, ask user if they want to continue that game or start a new one. if they want to start a new one, we need to get a new deckID
 - let them choose how many players and player names
+
+Bugs to fix:
+- 
 */
