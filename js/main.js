@@ -1,5 +1,10 @@
+// global variables
 let deckID = ''; // global variable for deckID
 let p1WarCard, p2WarCard;
+// variables to store pictures for player1 and 2
+let p1Pic = document.querySelector('#player1')
+let p2Pic = document.querySelector('#player2')
+
 // only if there is not already a deck id stored, then get a new deck
 if (!localStorage.getItem('deck_id')) {
   // we get a deck of cards. we store the id for that deck in a global variable deckID (if we don't already have a deckID in local storage)
@@ -36,9 +41,9 @@ buttonReg.addEventListener('click', () => {drawCards(2, false)});
 
 // when click button, draw 2 cards
 function drawCards(numCards, isWar){
-  const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=${numCards}`
+  const ogDeck = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=${numCards}`
 
-  fetch(url)
+  fetch(ogDeck)
     .then(res => res.json())
     .then(data => {
       console.log(data)
@@ -46,12 +51,9 @@ function drawCards(numCards, isWar){
       // if there aren't enough cards to draw from
       if (data.error === `Not enough cards remaining to draw ${numCards} additional`) {
         // **draw from your own piles
-        drawFromPlayerDecks()
+        drawFromPlayerDecks('player1', numCards)
+        drawFromPlayerDecks('player2', numCards)
       }
-
-      // variables to store pictures for player1 and 2
-      let p1Pic = document.querySelector('#player1')
-      let p2Pic = document.querySelector('#player2')
       
       // place images of cards picked into DOM
       p1Pic.src = data.cards[numCards - 2].image
@@ -185,17 +187,45 @@ function wartime() {
   warButton.addEventListener('click', () => drawCards(8, true))
 }
 
-// **function for when players start drawing from their own decks individually
-function drawFromPlayerDecks() {
+// **function for when players start drawing from their own decks individually. 
+// pass in which player is drawing from their deck? or don't pass in anything because regardless we will draw one from each deck. if someone has no cards left in their deck, they lose ando ther person wins
+function drawFromPlayerDecks(player, numCards) {
+  // URL to draw 1 card from player 1's deck
+  let p1DeckURL = `https://www.deckofcardsapi.com/api/deck/${deckID}/pile/player1/draw/?count=${numCards}`
+  
+  // URL to draw 1 card from player 2's deck
+  let p2DeckURL = `https://www.deckofcardsapi.com/api/deck/${deckID}/pile/player2/draw/?count=${numCards}`
+
+  // dictate which url to fetch based on which player was passed in
+  let url; 
+  player === 'player1' ? url = p1DeckURL : url = p2DeckURL;
+
+  // message about not enough cards to draw (temporary)
   document.querySelector('p').innerText = 'Not enough cards to draw from...in next iteration you will be able to draw from your own piles'
+
+  // API Fetch to draw from decks
+  fetch(url)
+  .then(res => res.json()) // parse response as JSON
+  .then(data => {
+    console.log(data);
+    // **need to insert pics into DOM, do the same comparisons made in regular draw from deck so we can compare who won
+    // need to add winners cards back into the piles they were drawn from (different api link i think)
+  })
+  .catch(err => {
+    console.log(`error ${err}`)
+  });
 }
 
 /*
 === CHANGES TO MAKE ===
+Where I left off:
+  - I was working on the drawFromPlayerDecks() function. Within that funciton, I need to: insert pics into DOM, do the same comparisons made in drawCards() so we can compare who won, add winners cards back into the piles they were drawn from (different api link i think)
+
 General
-  - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
+  - **handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
   - when they begin drawing from their own piles, update the card count (using the remaining property). get from local storage
   - announce who won the game and give option to play again
+  - make code more modular and DRY
 
 At beginning of game:
   - have it enter on a start game screen
