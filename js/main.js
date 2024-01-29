@@ -202,5 +202,5 @@ Styling
    - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 
 Bugs to fix:
-  - 
+  - During war rounds, winner needs to also add the intial cards that started the war to their own pile. (Change addEightToPile to add 10 cards, including the first that were chosen)
 */
