@@ -186,18 +186,21 @@ function drawFromPlayerDecks() {
 
 /*
 === CHANGES TO MAKE ===
-- show users how many cards each player has in their piles (and maybe a picture of it face down), when they begin drawing from their own piles, update that count (using the remaining property). get from local storage
-- handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
-- make a physcial representation of the 3 cards they are pulling before the 4th in the war round
-- announce who won the game
-- style game
-   - have war rounds styling be different/more intense than regular rounds
+General
+  - handle the case where you have no cards left but try to draw. instead you need to draw from your own deck (drawFromPlayerDecks())
+  - when they begin drawing from their own piles, update the card count (using the remaining property). get from local storage
+  - announce who won the game and give option to play again
 
 At beginning of game:
-- have it enter on a start game screen
-- if there was a previous game, ask user if they want to continue that game or start a new one. if they want to start a new one, we need to get a new deckID
-- let them choose how many players and player names
+  - have it enter on a start game screen
+  - if there was a previous game, ask user if they want to continue that game or start a new one. if they want to start a new one, we need to get a new deckID
+  - let them choose how many players and player names
+
+Styling
+   - have war rounds styling be different/more intense than regular rounds
+   - have a visual representation of a player pile with the count of how many they have in their pile
+   - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 
 Bugs to fix:
-- 
+  - 
 */
