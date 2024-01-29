@@ -1,5 +1,5 @@
 let deckID = ''; // global variable for deckID
-
+let p1WarCard, p2WarCard;
 // only if there is not already a deck id stored, then get a new deck
 if (!localStorage.getItem('deck_id')) {
   // we get a deck of cards. we store the id for that deck in a global variable deckID (if we don't already have a deckID in local storage)
@@ -66,7 +66,7 @@ function drawCards(numCards, isWar){
       // variable for where we place result
       let result = document.querySelector('h3')
 
-      // logic to handle who wins
+      // if player 1 wins
       if (player1Val > player2Val) {
         if (isWar) {
           result.innerText = 'Player 1 Wins the War!' 
@@ -84,15 +84,16 @@ function drawCards(numCards, isWar){
           let p2CardCode = data.cards[1].code
           addTwoToPile('player1', p1CardCode, p2CardCode)
         } else { // if it is war, they add 8 cards to their pile
-          let cardCodes = []
+          let cardCodes = [p1WarCard, p2WarCard]
           // fill array of card codes
           for (let i = 0; i < 8; i++) {
             cardCodes.push(data.cards[i].code)
           }
-          // pass them in as arguments to addEightToPile
-          addEightToPile('player1', ...cardCodes)
+          // pass them in as arguments to addTenToPile
+          addTenToPile('player1', ...cardCodes)
         }
 
+      // if player 2 wins
       } else if (player1Val < player2Val) {
         if (isWar) {
           result.innerText = 'Player 2 Wins the War!' 
@@ -106,14 +107,19 @@ function drawCards(numCards, isWar){
           let p2CardCode = data.cards[1].code
           addTwoToPile('player2', p1CardCode, p2CardCode)
         } else {
-          let cardCodes = []
+          // beginning with the cards that were intiially picked in array, then add the rest
+          let cardCodes = [p1WarCard, p2WarCard]
           for (let i = 0; i < 8; i++) {
             cardCodes.push(data.cards[i].code)
           }
-          addEightToPile('player2', ...cardCodes)
+          addTenToPile('player2', ...cardCodes)
         }
       
+      // if it is war
       } else {
+        // set pWarCards equal to the cards that prompted the war. stored in global variable so can add them to pile later
+        p1WarCard = data.cards[0].code
+        p2WarCard = data.cards[1].code
         result.innerText = 'TIME FOR WAR'
         console.log('WAR ROUND')
         wartime()
@@ -157,8 +163,8 @@ function addTwoToPile(player, card1, card2) {
   });
 }
 
-function addEightToPile(player, c1, c2, c3, c4, c5, c6, c7, c8) {
-  fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${c1},${c2},${c3},${c4},${c5},${c6},${c7},${c8}`)
+function addTenToPile(player, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10) {
+  fetch(`https://www.deckofcardsapi.com/api/deck/${deckID}/pile/${player}/add/?cards=${c1},${c2},${c3},${c4},${c5},${c6},${c7},${c8},${c9},${c10}`)
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
@@ -202,5 +208,5 @@ Styling
    - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 
 Bugs to fix:
-  - During war rounds, winner needs to also add the intial cards that started the war to their own pile. (Change addEightToPile to add 10 cards, including the first that were chosen)
+  - 
 */
