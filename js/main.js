@@ -211,7 +211,7 @@ function drawFromPlayerDecks(player, numCards) {
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
-    // add two buttons, one per deck?
+    // **add two buttons to draw from each individual pile?
 
     // insert images into DOM
     if (player === 'player1') {
