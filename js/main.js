@@ -29,6 +29,15 @@ if (!localStorage.getItem('p2Pile')) {
   localStorage.setItem('p2Pile', 0)
 }
 
+// *** testing
+// let p1PileCurrent = localStorage.getItem('p1Pile')
+// localStorage.setItem('p1Pile', p1PileCurrent)
+// document.querySelector('#p1PileCount').innerText = `${p1PileCurrent} Cards in Pile`
+
+// let p2PileCurrent = localStorage.getItem('p2Pile')
+// localStorage.setItem('p2Pile', p2PileCurrent)
+// document.querySelector('#p2PileCount').innerText = `${p2PileCurrent} Cards in Pile`
+
 // set deckID variable to the same ID stored in local storage
 deckID += localStorage.getItem('deck_id')
 
@@ -49,16 +58,13 @@ function drawCards(numCards, isWar){
       console.log(data)
 
       // if there aren't enough cards to draw from
-      if (data.error === `Not enough cards remaining to draw ${numCards} additional`) {
-        // **draw from your own piles
-        drawFromPlayerDecks('player1', numCards)
-        drawFromPlayerDecks('player2', numCards)
+      if (data.error === `Not enough cards remaining to draw ${numCards} additional` || data.cards.length < 1) {
+        // **draw from your own piles, each draw half the amount of cards total
+        drawFromPlayerDecks('player1', numCards/2)
+        drawFromPlayerDecks('player2', numCards/2)
       }
       
-      // place images of cards picked into DOM
-      p1Pic.src = data.cards[numCards - 2].image
-      p2Pic.src = data.cards[numCards - 1].image
-
+      placeImagesIntoDOM(data, numCards, 'og')
       document.querySelector('p').innerText = ''
     
       // get value from each card, pass into convertToNum function so all of our data can be handled as numbers
@@ -77,7 +83,6 @@ function drawCards(numCards, isWar){
     
         } else {
           result.innerText = 'Player 1 Wins!';
-
         }
         
         // if it isn't war and player 1 wins, they add 2 cards to their pile
@@ -126,7 +131,6 @@ function drawCards(numCards, isWar){
         console.log('WAR ROUND')
         wartime()
       }
-
     })
     .catch(err => {
       console.log(`error ${err}`)
@@ -140,16 +144,17 @@ function checkPileCounts(data) {
   // if they have the property remaining, set item to that property
   if (data.piles['player1'].remaining) {
     localStorage.setItem('p1Pile', data.piles['player1'].remaining)
-    
-    let p1PileCount = localStorage.getItem('p1Pile')
-    document.querySelector('#p1PileCount').innerText = `${p1PileCount} Cards in Pile`
   }
   if (data.piles['player2'].remaining) {
     localStorage.setItem('p2Pile', data.piles['player2'].remaining)
-
-    let p2PileCount = localStorage.getItem('p2Pile')
-    document.querySelector('#p2PileCount').innerText = `${p2PileCount} Cards in Pile`
   }
+
+  // get item out of local storage
+  let p1PileCount = localStorage.getItem('p1Pile')
+  document.querySelector('#p1PileCount').innerText = `${p1PileCount} Cards in Pile`
+  
+  let p2PileCount = localStorage.getItem('p2Pile')
+  document.querySelector('#p2PileCount').innerText = `${p2PileCount} Cards in Pile`
 }
 
 // function to add the cards each player has won into their own piles (normal rounds)
@@ -187,8 +192,6 @@ function wartime() {
   warButton.addEventListener('click', () => drawCards(8, true))
 }
 
-// **function for when players start drawing from their own decks individually. 
-// pass in which player is drawing from their deck? or don't pass in anything because regardless we will draw one from each deck. if someone has no cards left in their deck, they lose ando ther person wins
 function drawFromPlayerDecks(player, numCards) {
   // URL to draw 1 card from player 1's deck
   let p1DeckURL = `https://www.deckofcardsapi.com/api/deck/${deckID}/pile/player1/draw/?count=${numCards}`
@@ -201,19 +204,41 @@ function drawFromPlayerDecks(player, numCards) {
   player === 'player1' ? url = p1DeckURL : url = p2DeckURL;
 
   // message about not enough cards to draw (temporary)
-  document.querySelector('p').innerText = 'Not enough cards to draw from...in next iteration you will be able to draw from your own piles'
+  document.querySelector('p').innerText = 'You are now drawing from your own piles...this functionality is under construction'
 
   // API Fetch to draw from decks
   fetch(url)
   .then(res => res.json()) // parse response as JSON
   .then(data => {
     console.log(data);
-    // **need to insert pics into DOM, do the same comparisons made in regular draw from deck so we can compare who won
-    // need to add winners cards back into the piles they were drawn from (different api link i think)
+    // add two buttons, one per deck?
+
+    // insert images into DOM
+    if (player === 'player1') {
+      placeImagesIntoDOM(data, numCards, 'player1')
+    } else if (player === 'player2') {
+      placeImagesIntoDOM(data, numCards, 'player2')
+    }
+    // checkPileCounts(data)
+    // ***BUG
+    // **need to insert pics into DOM, update pile counts, make comparisons, decide who won, add winners cards back into their piles, and handle the case that one player doesn't have enough cards to choose from
   })
   .catch(err => {
     console.log(`error ${err}`)
   });
+}
+
+// place images of cards picked into DOM
+function placeImagesIntoDOM(data, numCards, whosePile) {
+  if (whosePile === 'og') {
+    p1Pic.src = data.cards[numCards - 2].image
+    p2Pic.src = data.cards[numCards - 1].image
+  } else if (whosePile === 'player1') {
+    p1Pic.src = data.cards[0].image
+  } else if (whosePile === 'player2') {
+    p2Pic.src = data.cards[0].image
+  }
+  
 }
 
 /*
@@ -238,5 +263,5 @@ Styling
    - make a physcial representation of the 3 cards they are pulling before the 4th in the war round
 
 Bugs to fix:
-  - 
+  - ***right now, drawing cards from each pile separately is messing up the pile count within the object that is returned. when we pick a card from players' decks, player 1 will draw and update their remaining cards to 1 less, then when player 2 draws, it updates itself to 1 less but player 1 is back to 1 more. need to figure out how to have an accurate pile count reflected
 */
