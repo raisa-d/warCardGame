@@ -214,11 +214,7 @@ function drawFromPlayerDecks(player, numCards) {
     // **add two buttons to draw from each individual pile?
 
     // insert images into DOM
-    if (player === 'player1') {
-      placeImagesIntoDOM(data, numCards, 'player1')
-    } else if (player === 'player2') {
-      placeImagesIntoDOM(data, numCards, 'player2')
-    }
+    placeImagesIntoDOM(data, numCards, player)
     // checkPileCounts(data)
     // ***BUG
     // **need to insert pics into DOM, update pile counts, make comparisons, decide who won, add winners cards back into their piles, and handle the case that one player doesn't have enough cards to choose from
